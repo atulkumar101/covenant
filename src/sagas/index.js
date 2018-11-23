@@ -196,7 +196,7 @@ function* sagaTimezoneDetails(action) {
       ordinalDate,
       dayOfTheWeek
     });
-    throw 'bad'
+    // throw 'bad'
     yield put(setTimezoneDetails);
   } catch (error) {
     console.log('Error: ', error)
