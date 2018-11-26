@@ -10,9 +10,8 @@ const {
 
 const prefix = 'incomplete-example'
 
-const fetchTimezoneDetails = () => {
-  const url = selectors.getTimezoneApiUrl(initialState);
-  return fetch(url).then(res => res.json()).catch(error => error);
+export const fetchTimezoneDetails = (url) => {
+  return fetch(url).then(res => res.json()).catch(error => { throw error });
 }
 
 export const actionTypes = {
@@ -30,7 +29,7 @@ export const actionTypes = {
   TIMEZONE_API_ERROR: `${prefix}/TIMEZONE_API_ERROR`,
 }
 
-const actionCreators = {
+export const actionCreators = {
   setTimestamp: timestamp => ({
     type: actionTypes.SET_TIMESTAMP,
     payload: {
@@ -91,7 +90,7 @@ const actionCreators = {
   })
 }
 
-const selectors = {
+export const selectors = {
   getTimestamp: state => state.getIn(['timestamp']),
   getTimezoneAbbreviation: state =>
     state.getIn(['timezone', 'abbreviation'], 'utc'),
@@ -175,11 +174,11 @@ export function* rootSaga() {
   yield takeLatest(actionTypes.SAGA_TIMEZONE_DETAILS, sagaTimezoneDetails)
 }
 
-function* sagaTimezoneDetails(action) {
-  const url = selectors.getTimezoneApiUrl(initialState);
+export function* sagaTimezoneDetails(action) {
+  const url = yield select(selectors.getTimezoneApiUrl);
   try {
     // get result from api
-    const timezoneDetails = yield call(fetchTimezoneDetails);
+    const timezoneDetails = yield call(fetchTimezoneDetails, url);
     const {
       timeZoneName,
       utcOffset,
@@ -196,12 +195,13 @@ function* sagaTimezoneDetails(action) {
       ordinalDate,
       dayOfTheWeek
     });
-    throw 'bad'
     yield put(setTimezoneDetails);
+
+    // Also needs to handle ApiFailure
   } catch (error) {
-    console.log('Error: ', error)
     const setError = actionCreators.timezoneApiError(url, error);
     yield put(setError);
+    return -1;
   }
 
 }

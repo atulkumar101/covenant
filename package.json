@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/core": "^7.1.6",
     "assert": "^1.4.1",
+    "babel-loader": "^8.0.0-beta.6",
     "node-fetch": "^2.3.0",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
@@ -11,7 +13,8 @@
     "react-scripts": "2.1.1",
     "redux": "^4.0.1",
     "redux-saga": "^0.16.2",
-    "seamless-immutable": "^7.1.4"
+    "seamless-immutable": "^7.1.4",
+    "sinon": "^7.1.1"
   },
   "scripts": {
     "start": "react-scripts start",
